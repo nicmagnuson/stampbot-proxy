@@ -69,24 +69,29 @@ export default async function handler(req, res) {
   const messages = await fetch(`https://api.openai.com/v1/threads/${thread_id}/messages`, {
     headers: { Authorization: `Bearer ${OPENAI_API_KEY}` },
   }).then(r => r.json());
-  
-  // 🧪 DEBUG LOG
-  console.log("🔍 Full message from OpenAI:", JSON.stringify(messages, null, 2));
-  
 
-  const content = messages.data[0].content?.[0];
-  const tool_calls = messages.data[0].tool_calls;
+  // 🧪 DEBUG LOG
+  console.log("🧠 Full OpenAI response:", JSON.stringify(messages, null, 2));
+
+  const firstMessage = messages.data?.[0];
+
+  if (!firstMessage) {
+    return res.status(500).json({ error: "No messages returned from assistant." });
+  }
+
+  const content = firstMessage.content?.[0];
+  const tool_calls = firstMessage.tool_calls;
 
   if (content?.type === "text") {
-    res.status(200).json({ type: "text", value: content.text.value });
-  } else if (tool_calls?.length && tool_calls[0].function.name === "generate_black_and_white_lineart") {
+    return res.status(200).json({ type: "text", value: content.text.value });
+  } else if (tool_calls?.[0]?.function?.name === "generate_black_and_white_lineart") {
     const args = JSON.parse(tool_calls[0].function.arguments);
     if (args?.image_url) {
-      res.status(200).json({ type: "image", url: args.image_url });
+      return res.status(200).json({ type: "image", url: args.image_url });
     } else {
-      res.status(500).json({ error: "No image_url returned by tool" });
+      return res.status(500).json({ error: "No image_url returned by tool." });
     }
   } else {
-    res.status(500).json({ error: "Unexpected content type" });
+    return res.status(200).json({ type: "text", value: "🤔 Assistant returned an unexpected format. Try again?" });
   }
 }
