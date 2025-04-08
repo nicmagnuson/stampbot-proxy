@@ -18,8 +18,8 @@ export default async function handler(req, res) {
 
   let userInput;
   try {
-    console.log("📦 Raw req.body:", req.body); 
-    userInput = req.body.userInput; // ✅ FIXED HERE
+    console.log("📦 Raw req.body:", req.body);
+    userInput = req.body.userInput; // ✅ Fixed to remove JSON.parse
   } catch (err) {
     console.error("❌ Failed to parse request body:", err);
     return res.status(400).json({ error: "Invalid request body" });
@@ -96,3 +96,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ type: "text", value: "🤔 Assistant returned an unexpected format. Try again?" });
   }
 }
+
+export const config = {
+  maxDuration: 300, // Increased timeout to 300 seconds
+};
