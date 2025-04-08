@@ -18,8 +18,10 @@ export default async function handler(req, res) {
 
   let userInput;
   try {
+    console.log("📦 Raw req.body:", req.body); // Add this to see what’s coming in
     userInput = JSON.parse(req.body).userInput;
   } catch (err) {
+    console.error("❌ Failed to parse JSON body:", err); // Add this to log the error
     return res.status(400).json({ error: "Invalid request body" });
   }
 
@@ -70,7 +72,6 @@ export default async function handler(req, res) {
     headers: { Authorization: `Bearer ${OPENAI_API_KEY}` },
   }).then(r => r.json());
 
-  // 🧪 DEBUG LOG
   console.log("🧠 Full OpenAI response:", JSON.stringify(messages, null, 2));
 
   const firstMessage = messages.data?.[0];
