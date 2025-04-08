@@ -98,5 +98,5 @@ export default async function handler(req, res) {
 }
 
 export const config = {
-  maxDuration: 55, // Increased timeout to 55 seconds
+  maxDuration: 50, // Increased timeout to 50 seconds
 };
