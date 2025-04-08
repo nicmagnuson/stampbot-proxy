@@ -18,10 +18,10 @@ export default async function handler(req, res) {
 
   let userInput;
   try {
-    console.log("📦 Raw req.body:", req.body); // Add this to see what’s coming in
-    userInput = JSON.parse(req.body).userInput;
+    console.log("📦 Raw req.body:", req.body); 
+    userInput = req.body.userInput; // ✅ FIXED HERE
   } catch (err) {
-    console.error("❌ Failed to parse JSON body:", err); // Add this to log the error
+    console.error("❌ Failed to parse request body:", err);
     return res.status(400).json({ error: "Invalid request body" });
   }
 
