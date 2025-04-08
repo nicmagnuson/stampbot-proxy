@@ -1,4 +1,6 @@
 export default async function handler(req, res) {
+  console.log("🔔 Received a request to /api/stampbot");
+
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     res.setHeader("Access-Control-Allow-Origin", "*");
