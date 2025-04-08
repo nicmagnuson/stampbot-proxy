@@ -2,6 +2,18 @@ export default async function handler(req, res) {
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
   const assistant_id = "asst_8JwGnLcVMYxFhHCFVGkepyLR";
 
+  // 🔥 Handle CORS preflight request
+  if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.status(200).end();
+    return;
+  }
+
+  // 🔥 Fix CORS on normal requests too
+  res.setHeader("Access-Control-Allow-Origin", "*");
+
   const { userInput } = JSON.parse(req.body);
 
   const thread = await fetch("https://api.openai.com/v1/threads", {
@@ -47,9 +59,6 @@ export default async function handler(req, res) {
   }).then(r => r.json());
 
   const content = messages.data[0].content[0];
-
-  // 🔥 Fix CORS
-  res.setHeader("Access-Control-Allow-Origin", "*");
 
   if (content.type === "text") {
     res.status(200).json({ type: "text", value: content.text.value });
