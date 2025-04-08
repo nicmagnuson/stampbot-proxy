@@ -48,6 +48,9 @@ export default async function handler(req, res) {
 
   const content = messages.data[0].content[0];
 
+  // 🔥 Fix CORS
+  res.setHeader("Access-Control-Allow-Origin", "*");
+
   if (content.type === "text") {
     res.status(200).json({ type: "text", value: content.text.value });
   } else if (content.type === "image_file") {
@@ -57,4 +60,3 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "Unexpected content type" });
   }
 }
-
