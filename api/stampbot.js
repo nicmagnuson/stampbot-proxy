@@ -67,6 +67,10 @@ export default async function handler(req, res) {
   const messages = await fetch(`https://api.openai.com/v1/threads/${thread_id}/messages`, {
     headers: { Authorization: `Bearer ${OPENAI_API_KEY}` },
   }).then(r => r.json());
+  
+  // 🧪 DEBUG LOG
+  console.log("🔍 Full message from OpenAI:", JSON.stringify(messages, null, 2));
+  
 
   const content = messages.data[0].content?.[0];
   const tool_calls = messages.data[0].tool_calls;
